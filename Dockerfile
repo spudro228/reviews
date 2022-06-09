@@ -3,7 +3,7 @@ ARG PHP_VERSION=8.1
 
 FROM php:${PHP_VERSION}-fpm-alpine AS symfony_php
 
-# persistent / runtime deps
+# persistent / runtime deps-
 RUN apk add --no-cache \
 		acl \
 		fcgi \
@@ -49,13 +49,6 @@ RUN set -eux; \
 RUN ln -s $PHP_INI_DIR/php.ini-development $PHP_INI_DIR/php.ini
 COPY docker/php/conf.d/symfony.dev.ini $PHP_INI_DIR/conf.d/symfony.ini
 
-COPY docker/php/php-fpm.d/zz-docker.conf /usr/local/etc/php-fpm.d/zz-docker.conf
-
-#COPY docker/php/docker-entrypoint.sh /usr/local/bin/docker-entrypoint
-#RUN chmod +x /usr/local/bin/docker-entrypoint
-
-VOLUME /var/run/php
-
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 # https://getcomposer.org/doc/03-cli.md#composer-allow-superuser
@@ -63,35 +56,21 @@ ENV COMPOSER_ALLOW_SUPERUSER=1
 
 ENV PATH="${PATH}:/root/.composer/vendor/bin"
 
-WORKDIR /srv/app
+# Add user for laravel application
+RUN set -x \
+	&& addgroup -g 1000 -S www \
+	&& adduser -u 1000 -D -S -G www www
 
-# Allow to choose skeleton
-ARG SKELETON="symfony/webapp"
-ENV SKELETON ${SKELETON}
 
-# Allow to use development versions of Symfony
-ARG STABILITY="stable"
-ENV STABILITY ${STABILITY}
+# Copy existing application directory contents
+COPY . /var/www
 
-# Allow to select skeleton version
-ARG SYMFONY_VERSION=""
-ENV SYMFONY_VERSION ${SYMFONY_VERSION}
+# Copy existing application directory permissions
+COPY --chown=www:www . /var/www
 
-## Download the Symfony skeleton and leverage Docker cache layers
-#RUN composer create-project "${SKELETON} ${SYMFONY_VERSION}" . --stability=$STABILITY --prefer-dist --no-dev --no-progress --no-interaction; \
-#	composer clear-cache
+# Change current user to www
+USER www
 
-COPY . .
-#
-#RUN set -eux; \
-#	mkdir -p var/cache var/log; \
-#	composer install --prefer-dist --no-dev --no-progress --no-scripts --no-interaction; \
-#	composer dump-autoload --classmap-authoritative --no-dev; \
-#	composer symfony:dump-env prod; \
-#	composer run-script --no-dev post-install-cmd; \
-#	chmod +x bin/console; sync
-
-#VOLUME /srv/app/var
-
-#ENTRYPOINT ["docker-entrypoint"]
+# Expose port 9000 and start php-fpm server
+EXPOSE 9000
 CMD ["php-fpm"]
