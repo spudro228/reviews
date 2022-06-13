@@ -1,0 +1,9 @@
+App\Domain\Entity\Review:
+  collectionOperations:
+    addReview:
+      method: 'POST'
+      input: App\App\Command\AddNewReviewCommand
+      output: false
+      path: '/review/add'
+  itemOperations: []
+

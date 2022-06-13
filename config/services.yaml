@@ -19,6 +19,12 @@ services:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
             - '../src/Kernel.php'
+            - '../src/Domain/'
+            - '../src/App/'
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+
+    App\App\Command\AddNewReviewCommandHandler: ~
+    App\App\Command\AddNewReviewCommand: ~
