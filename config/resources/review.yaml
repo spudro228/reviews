@@ -4,6 +4,7 @@ App\Domain\Entity\Review:
       method: 'POST'
       input: App\App\Command\AddNewReviewCommand
       output: false
-      path: '/review/add'
+#      route_name: 'review_add'
+      controller: App\Controller\AddReviewController
   itemOperations: []
 
