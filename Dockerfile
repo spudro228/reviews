@@ -25,7 +25,10 @@ RUN set -eux; \
 	docker-php-ext-install -j$(nproc) \
 		intl \
 		zip \
-	; \
+        mysqli \
+        pdo \
+        pdo_mysql \
+    ; \
 	pecl install \
 		apcu-${APCU_VERSION} \
 	; \
@@ -33,7 +36,8 @@ RUN set -eux; \
 	docker-php-ext-enable \
 		apcu \
 		opcache \
-	; \
+        pdo_mysql \
+    ; \
 	\
 	runDeps="$( \
 		scanelf --needed --nobanner --format '%n#p' --recursive /usr/local/lib/php/extensions \
