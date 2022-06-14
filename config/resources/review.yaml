@@ -4,7 +4,13 @@ App\Domain\Entity\Review:
       method: 'POST'
       input: App\App\Command\AddNewReviewCommand
       output: false
-#      route_name: 'review_add'
+      route_name: 'review_add'
+      controller: App\Controller\AddReviewController
+    getReviews:
+      method: 'GET'
+      input: App\App\Query\GetReviewsQuery
+      output: App\App\Query\GetReviewsQueryResult
+      route_name: 'reviews_get'
       controller: App\Controller\AddReviewController
   itemOperations: []
 

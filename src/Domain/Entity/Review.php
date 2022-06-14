@@ -5,13 +5,14 @@ declare(strict_types=1);
 
 namespace App\Domain\Entity;
 
+use ApiPlatform\Core\Annotation\ApiProperty;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
 #[ORM\Table(name: "reviews")]
 class Review
 {
-    #[\ApiPlatform\Core\Annotation\ApiProperty(identifier: true)]
+    #[ApiProperty(identifier: true)]
     #[ORM\Id]
     #[ORM\Column(type: "integer")]
     #[ORM\GeneratedValue]
@@ -61,5 +62,15 @@ class Review
             $comment,
             $startQ,
         );
+    }
+
+    public function getStars(): float
+    {
+        return $this->startQ->starts;
+    }
+
+    public function getComment(): string
+    {
+        return $this->comment;
     }
 }

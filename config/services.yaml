@@ -30,3 +30,6 @@ services:
     App\App\Command\AddNewReviewCommand: ~
 
     App\App\Repository\ReviewRepositoryInterface: '@App\Repository\ReviewRepository'
+
+    App\App\Query\GetReviewsHandler: ~
+    App\App\Query\GetReviewsQuery: ~

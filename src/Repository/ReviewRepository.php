@@ -24,4 +24,17 @@ class ReviewRepository implements ReviewRepositoryInterface
         $this->entityManager->persist($review);
         $this->entityManager->flush();
     }
+
+    public function findByProductId(int $productId): array
+    {
+        $qb = $this->repository->createQueryBuilder('r');
+
+//        $qb
+//            ->andWhere('r.productId = :productId');
+//
+//        $qb
+//            ->setParameter('productId', $productId);
+
+        return $qb->getQuery()->getResult();
+    }
 }
